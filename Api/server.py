@@ -1,4 +1,10 @@
-from flask import Flask
+import sys
+from werkzeug.wrappers import Response
+from flask import Flask, jsonify, request
+
+from Config.ConfigGetter import config
+
+sys.path.append('../')
 
 app = Flask(__name__)
 

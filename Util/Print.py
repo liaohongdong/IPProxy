@@ -1,7 +1,13 @@
 import pprint
 
 
-class out():
-    def __init__(self, info=""):
-        self.pp = pprint.PrettyPrinter(indent=4)
-        self.pp.pprint(info)
+class Out(object):
+    def __init__(self):
+        pass
+
+    def o(slef, info=''):
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(info)
+
+
+o = Out().o
