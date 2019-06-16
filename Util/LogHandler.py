@@ -1,6 +1,6 @@
 import os
 import logging
-import Print
+from Util.Print import o
 
 from logging.handlers import TimedRotatingFileHandler
 
@@ -63,9 +63,9 @@ class Loghandler(logging.Logger):
 if __name__ == "__main__":
     # Print.out(os.path.abspath(__file__))
     # Print.out(os.path.dirname(os.path.abspath(__file__)))
-    Print.out(LOG_PATH)
-    Print.out(CURRENT_PATH)
-    Print.out(ROOT_PATH)
-    Print.out("(%s), (%s), (%s)" % (CURRENT_PATH, ROOT_PATH, LOG_PATH))
+    o(LOG_PATH)
+    o(CURRENT_PATH)
+    o(ROOT_PATH)
+    o("(%s), (%s), (%s)" % (CURRENT_PATH, ROOT_PATH, LOG_PATH))
     log = Loghandler('test')
     log.info("(%s), (%s), (%s)" % (CURRENT_PATH, ROOT_PATH, LOG_PATH))

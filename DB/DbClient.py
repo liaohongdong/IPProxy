@@ -20,7 +20,7 @@ class DbClient(object):
     def __initDbClient(self):
         __type = None
         if "redis" == config.db_type:
-            __type = "redis"
+            __type = "SsdbClient"
         else:
             pass
         assert __type, 'type error, Not supper DB type: {}'.format(config.db_type)
@@ -30,81 +30,45 @@ class DbClient(object):
         #     password=config.db_password,
         #     decode_responses=True,
         # )
-        pool = getattr(__import__(__type), 'ConnectionPool')(
+        self.client = getattr(__import__(__type), __type)(
+            name=config.db_name,
             host=config.db_host,
             port=config.db_port,
             password=config.db_password,
             decode_responses=True,
             db=0
         )
-        self.client = redis.Redis(connection_pool=pool)
 
-    def get(self, key, *args):
-        return self.client.hget(key, *args)
-        # return self.client.hlen(key)
+    def get(self, key, **kwargs):
+        return self.client.get(key, *kwargs)
 
-    def getFirst(self, *args):
-        return self.client.hkeys(*args)[0]
+    def put(self, key, **kwargs):
+        return self.client.put(key, **kwargs)
 
-    def getLast(self, *args):
-        return self.client.hkeys(*args)[self.client.hlen(*args) - 1]
+    def update(self, key, value, **kwargs):
+        return self.client.update(key, value, **kwargs)
 
-    def getRandom(self, *args):
-        return random.choice(self.client.hkeys(*args))
+    def delete(self, key, **kwargs):
+        return self.client.delete(self, key, **kwargs)
 
-    # def put(self, key, **kwargs):
-    #     return self.client.put(key, **kwargs)
+    def exists(self, key, **kwargs):
+        return self.client.exists(key, **kwargs)
 
-    def put(self, key, *args):
-        return self.client.hset(key, *args)
+    def pop(self, **kwargs):
+        return self.client.pop(**kwargs)
 
-    def delete(self, key, *args):
-        return self.client.hdel(key, *args)
+    def getAll(self):
+        return self.client.getAll()
 
-    def exists(self, key, *args):
-        return self.client.hexists(key, *args)
-
-    def getAll(self, key, *args):
-        return self.client.hgetall(key)
+    def changeTable(self, name):
+        self.client.changeTable(name)
 
     def getNumber(self):
-        return self.client.dbsize()
+        return self.client.getNumber()
 
 
 if __name__ == '__main__':
-    a = DbClient()
-    a.put('map', "python", "123")
-    # o(a.getNumber())
-    # o(a.getAll('map'))
-    # o(a.exists('map', 'python'))
-    # o(a.delete('map', 'python'))
-    # o(os.path.dirname(__file__))
-    # o(__file__)
-    # o(os.path.abspath(__file__))
-    # o(os.path.dirname(os.path.abspath(__file__)))
-    # print(__file__)
-    # __type = False
-    # assert __type, 'type error, Not supper DB type: {}'.format(config.db_type)
-
-    # __type = "redis"
-    # pool = getattr(__import__(__type), 'ConnectionPool')(
-    #     host=config.db_host,
-    #     port=config.db_port,
-    #     password=config.db_password,
-    #     decode_responses=True,
-    # )
-    # r = redis.Redis(connection_pool=pool)
-
-    # r.mset({'a': 'a', 'a1': 'a1'})
-    # print(r.mget('a', 'a1'))
-    # r.getset('a', '1008611')
-    # print(r.getrange('a', 0, 10))
-    # r.setrange('a', 3, 'b')
-    # r.setrange('a', 7, 4)
-    # o(r.get('a'))
-    # r.hset("hash1", "k13", "v122")
-    # o(r.hgetall('hash1'))
-    # r.rpush('liao', 1, 2, 3, 4)
-    # o(r.lrange('liao', 0, r.llen('liao')))
-    # o(r.strlen('a'))
-    pass
+    account = DbClient()
+    # account.changeTable('useful_proxy')
+    account.changeTable('map')
+    print(account.get())
