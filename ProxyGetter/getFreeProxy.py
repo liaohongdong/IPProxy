@@ -7,6 +7,7 @@ from Util.utilFunction import getHtmlTree
 from Util.WebRequest import WebRequest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from lxml import etree
 
 sys.path.append('..')
@@ -31,23 +32,22 @@ class GetFreeProxy(object):
                 except Exception as e:
                     print(e)
 
-    @staticmethod
-    def freeProxySecond(count=20):
+    @classmethod
+    def freeProxySecond(cls, count=20):
         urls = [
             "http://www.66ip.cn/mo.php?sxb=&tqsl={count}&port=&export=&ktip=&sxa=&submit=%CC%E1++%C8%A1&textarea=",
             "http://www.66ip.cn/nmtq.php?getnum={count}&isp=0&anonymoustype=0&start=&ports=&export=&ipaddress=&area=1&proxytype=2&api=66ip",
         ]
-        request = WebRequest()
-        url = urls[0].format(count=count)
-        o(url)
-        html = request.get(url).content
-        o(html.decode('utf8'))
-        return
-        for _ in urls:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
+            'Cookie': '__jsluid=791a40e3ae570ed6fcbe6ae547617390; __jsl_clearance=1560760725.943|0|LZc2w%2FdLv49feXKKfnYUm4SIy1s%3D'
+        }
+        for index, _ in enumerate(urls):
             url = _.format(count=count)
-            html = request.get(url).content
-            o(html)
-            ips = re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}", html.decode('utf-8'))
+            cls.driver(url, headers)
+
+            # html = request.get(url).content
+            # ips = re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}", html.decode('utf-8'))
             # o(ips)
             # for ip in ips:
             #     ip = ip.decode('utf-8')
@@ -55,11 +55,26 @@ class GetFreeProxy(object):
             #     yield ip.strip()
 
     @staticmethod
-    def driver(*args):
+    def driver(url, headers):
+        print(url)
         options = Options()
         options.add_argument('--headless')
+        options.add_argument('user-agent=' + headers['User-Agent'])
         driver = webdriver.Chrome(options=options)
-        driver
+        # driver = webdriver.Chrome()
+        driver.get(url)
+        cookies_clearance = driver.get_cookie('__jsl_clearance')
+        cookies_jsluid = driver.get_cookie('__jsluid')
+        driver.delete_all_cookies()
+        driver.add_cookie({'name': '__jsl_clearance', 'value': cookies_clearance['value']})
+        driver.add_cookie({'name': '__jsluid', 'value': cookies_jsluid['value']})
+
+        driver.get(url)
+        driver.implicitly_wait(1)
+        driver.maximize_window()
+        time.sleep(1)
+        html = driver.page_source
+        open(str(time.gmtime().tm_sec) + 'a.html', 'w').write(html)
         # -------------------------------------- #
         # d.get('http://www.baidu.com')
         # d.implicitly_wait(1)
@@ -82,7 +97,8 @@ if __name__ == '__main__':
     g = GetFreeProxy()
     # d = g.freeProxyFirst()
     # g.freeProxySecond()
-    g.driver()
+    # g.driver()
+    g.freeProxySecond()
 
     # for i in d:
     #     o(i)
