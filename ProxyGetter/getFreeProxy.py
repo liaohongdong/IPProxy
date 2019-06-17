@@ -1,11 +1,13 @@
 import re
 import sys
 import requests
-
+import time
 from Util.Print import o
 from Util.utilFunction import getHtmlTree
 from Util.WebRequest import WebRequest
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from lxml import etree
 
 sys.path.append('..')
 
@@ -53,12 +55,28 @@ class GetFreeProxy(object):
             #     yield ip.strip()
 
     @staticmethod
-    def driver():
-        d = webdriver.Chrome()
-        d.get('http://www.baidu.com')
-        d.find_element_by_id('kw').send_keys('selenium')
-        d.find_element_by_id('su').click()
-        
+    def driver(*args):
+        options = Options()
+        options.add_argument('--headless')
+        driver = webdriver.Chrome(options=options)
+        driver
+        # -------------------------------------- #
+        # d.get('http://www.baidu.com')
+        # d.implicitly_wait(1)
+        # d.maximize_window()
+        # d.find_element_by_id('kw').send_keys('selenium')
+        # d.find_element_by_id('su').click()
+        # time.sleep(1)
+        # html = d.page_source
+        # open('aaa.html', 'w').write(html)
+        # dom = etree.HTML(html)
+        # left = dom.xpath('//div[@id="content_left"]/*[@class="result c-container "]')
+        # for i in left:
+        #     o(i.xpath('./h3/a/@href'))
+        # print(len(left))
+        # print(type(dom))
+        # -------------------------------------- #
+
 
 if __name__ == '__main__':
     g = GetFreeProxy()
