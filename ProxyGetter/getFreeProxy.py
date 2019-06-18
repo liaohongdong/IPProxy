@@ -57,7 +57,7 @@ class GetFreeProxy(object):
         }
         for index, _ in enumerate(urls):
             url = _.format(count=count)
-            page = cls.driver(url, headers)
+            page = cls.driver(url, headers, cookie=True)
             ips = re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}", page)
             for item in ips:
                 arr = item.split(':')
@@ -118,7 +118,7 @@ class GetFreeProxy(object):
                         port = proxy.xpath('./td[3]/text()')
                         province = proxy.xpath('./td[4]/a/text()')
                         anonymity = proxy.xpath('./td[5]/text()')
-                        type = proxy.xpath('./td[6]/text()')
+                        types = proxy.xpath('./td[6]/text()')
                         resp_speed = proxy.xpath('./td[7]/div[1]/@title')
                         life = proxy.xpath('./td[9]/text()')
                         final_verify_time = proxy.xpath('./td[10]/text()')
@@ -127,7 +127,7 @@ class GetFreeProxy(object):
                             'ip': ip[0],  # 地址
                             'port': port[0],  # 端口
                             'anonymity': anonymity[0],  # 透明度
-                            'type': type[0],  # 网络类型
+                            'type': types[0],  # 网络类型
                             'country': '',  # 国家
                             'province': province[0],  # 省市
                             'operator': '',  # 运营商
@@ -138,26 +138,164 @@ class GetFreeProxy(object):
                     except Exception as e:
                         o(e)
 
-    @staticmethod
-    def freeProxyFifth():
+    @classmethod
+    def freeProxyFifth(cls):
         url = "http://www.goubanjia.com/"
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
+        }
+        page = cls.driver(url, headers)
+        proxy_list = etree.HTML(page).xpath('//td[@class="ip"]')
+        # 此网站有隐藏的数字干扰，或抓取到多余的数字或.符号
+        # 需要过滤掉<p style="display:none;">的内容
+        xpath_str = """.//*[not(contains(@style, 'display: none'))
+                            and not(contains(@style, 'display:none'))
+                            and not(contains(@class, 'port'))
+                            ]/text()
+                    """
+        for each_proxy in proxy_list:
+            try:
+                # :符号裸放在td下，其他放在div span p中，先分割找出ip，再找port
+                ip_addr = ''.join(each_proxy.xpath(xpath_str))
+                port = each_proxy.xpath(".//span[contains(@class, 'port')]/text()")[0]
+                anonymity = each_proxy.xpath(".//../td[2]/a/text()")
+                types = each_proxy.xpath(".//../td[3]/a/text()")[0]
+                address = each_proxy.xpath(".//../td[4]/a/text()")
+                country = address[0]
+                province = address[1] + address[2]
+                operator = each_proxy.xpath(".//../td[5]/a/text()")[0]
+                resp_speed = each_proxy.xpath(".//../td[6]/text()")[0]
+                final_verify_time = each_proxy.xpath(".//../td[7]/text()")[0]
+                life = each_proxy.xpath(".//../td[8]/text()")[0]
+                yield {
+                    'ip': ip_addr,  # 地址
+                    'port': port,  # 端口
+                    'anonymity': anonymity[0],  # 透明度
+                    'type': types,  # 网络类型
+                    'country': country,  # 国家
+                    'province': province,  # 省市
+                    'operator': operator,  # 运营商
+                    'resp_speed': resp_speed,  # 响应速度
+                    'final_verify_time': final_verify_time,  # 最后验证时间
+                    'life': life,  # 存活时间
+                }
+            except Exception as e:
+                o(e)
+
+    @classmethod
+    def freeProxySixth(cls):
+        url_list = [
+            'https://www.kuaidaili.com/free/inha/',
+            'https://www.kuaidaili.com/free/intr/'
+        ]
+        for url in url_list:
+            tree = getHtmlTree(url)
+            proxy_list = tree.xpath('.//table//tr')
+            for tr in proxy_list[1:]:
+                # yield ':'.join(tr.xpath('./td/text()')[0:2])
+                yield {
+                    'ip': tr.xpath('./td[1]/text()')[0],  # 地址
+                    'port': tr.xpath('./td[2]/text()')[0],  # 端口
+                    'anonymity': tr.xpath('./td[3]/text()')[0],  # 透明度
+                    'type': tr.xpath('./td[4]/text()')[0],  # 网络类型
+                    'country': '',  # 国家
+                    'province': tr.xpath('./td[5]/text()')[0],  # 省市
+                    'operator': '',  # 运营商
+                    'resp_speed': tr.xpath('./td[6]/text()')[0],  # 响应速度
+                    'final_verify_time': tr.xpath('./td[7]/text()')[0],  # 最后验证时间
+                    'life': '',  # 存活时间
+                }
+
+    @classmethod
+    def freeProxySeventh(cls):
+        """
+        云代理 http://www.ip3366.net/free/
+        """
+        urls = ['http://www.ip3366.net/free/']
+        request = WebRequest()
+        for url in urls:
+            r = request.get(url, timeout=10)
+            page = r.content.decode('utf-8', 'ignore')
+            html = etree.HTML(page)
+            tr_list = html.xpath('.//table/tbody/tr')
+            for il in tr_list:
+                # o(il.xpath('.//td[1]/text()')+il.xpath('.//td[2]/text()'))
+                yield {
+                    'ip': il.xpath('.//td[1]/text()')[0],  # 地址
+                    'port': il.xpath('.//td[2]/text()')[0],  # 端口
+                    'anonymity': '',  # 透明度
+                    'type': il.xpath('.//td[4]/text()')[0],  # 网络类型
+                    'country': '',  # 国家
+                    'province': '',  # 省市
+                    'operator': '',  # 运营商
+                    'resp_speed': il.xpath('.//td[6]/text()')[0],  # 响应速度
+                    'final_verify_time': il.xpath('.//td[7]/text()')[0],  # 最后验证时间
+                    'life': '',  # 存活时间
+                }
+
+    @classmethod
+    def freeProxyEight(cls, page_count=2):
+        for i in range(1, page_count + 1):
+            url = 'http://ip.jiangxianli.com/?page={}'.format(i)
+            html_tree = getHtmlTree(url)
+            # tr_list = html_tree.xpath("/html/body/div[1]/div/div[1]/div[2]/table/tbody/tr")
+            tr_list = html_tree.xpath('.//table/tbody/tr')
+            if len(tr_list) == 0:
+                continue
+            for il in tr_list:
+                # yield tr.xpath("./td[2]/text()")[0] + ":" + tr.xpath("./td[3]/text()")[0]
+                # o(il.xpath('.//td[6]/text()')[0] if len(il.xpath('.//td[6]/text()')) != 0 else '333')
+                yield {
+                    'ip': il.xpath('.//td[2]/text()')[0],  # 地址
+                    'port': il.xpath('.//td[3]/text()')[0],  # 端口
+                    'anonymity': il.xpath('.//td[4]/text()')[0],  # 透明度
+                    'type': il.xpath('.//td[5]/text()')[0],  # 网络类型
+                    'country': '',  # 国家
+                    'province': il.xpath('.//td[6]/text()')[0] if len(il.xpath('.//td[6]/text()')) != 0 else '',  # 省市
+                    'operator': il.xpath('.//td[7]/text()')[0] if len(il.xpath('.//td[7]/text()')) != 0 else '',  # 运营商
+                    'resp_speed': il.xpath('.//td[8]/text()')[0],  # 响应速度
+                    'final_verify_time': il.xpath('.//td[9]/text()')[0],  # 最后验证时间
+                    'life': '',  # 存活时间
+                }
+
+    @classmethod
+    def freeProxyNinth(cls):
+        urls = ['https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-1']
+        request = WebRequest()
+        for url in urls:
+            r = request.get(url, timeout=10)
+            proxies = re.findall(r'<td>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})</td>[\s\S]*?<td>(\d+)</td>', r.text)
+            for proxy in proxies:
+                yield {
+                    'ip': proxy[0],  # 地址
+                    'port': proxy[1],  # 端口
+                    'anonymity': '',  # 透明度
+                    'type': '',  # 网络类型
+                    'country': '',  # 国家
+                    'province': '',  # 省市
+                    'operator': '',  # 运营商
+                    'resp_speed': '',  # 响应速度
+                    'final_verify_time': '',  # 最后验证时间
+                    'life': '',  # 存活时间
+                }
 
     @staticmethod
-    def driver(url, headers):
+    def driver(url, headers, cookie=None):
         # print(url)
         options = Options()
         options.add_argument('--headless')
         options.add_argument('user-agent=' + headers['User-Agent'])
         driver = webdriver.Chrome(options=options)
         # driver = webdriver.Chrome()
-        driver.get(url)
-        cookies_clearance = driver.get_cookie('__jsl_clearance')
-        cookies_jsluid = driver.get_cookie('__jsluid')
-        # o(cookies_clearance)
-        # o(cookies_jsluid)
-        driver.delete_all_cookies()
-        driver.add_cookie({'name': '__jsl_clearance', 'value': cookies_clearance['value']})
-        driver.add_cookie({'name': '__jsluid', 'value': cookies_jsluid['value']})
+        if cookie is not None:
+            driver.get(url)
+            cookies_clearance = driver.get_cookie('__jsl_clearance')
+            cookies_jsluid = driver.get_cookie('__jsluid')
+            # o(cookies_clearance)
+            # o(cookies_jsluid)
+            driver.delete_all_cookies()
+            driver.add_cookie({'name': '__jsl_clearance', 'value': cookies_clearance['value']})
+            driver.add_cookie({'name': '__jsluid', 'value': cookies_jsluid['value']})
         driver.get(url)
         driver.implicitly_wait(1)
         driver.maximize_window()
@@ -190,6 +328,10 @@ if __name__ == '__main__':
     # d = g.freeProxySecond()
     # d = g.freeProxyThird()
     # d = g.freeProxyFourth()
-    d = g.freeProxyFifth()
+    # d = g.freeProxyFifth()
+    # d = g.freeProxySixth()
+    # d = g.freeProxySeventh()
+    # d = g.freeProxyEight()
+    d = g.freeProxyNinth()
     for i in d:
         o(i)
