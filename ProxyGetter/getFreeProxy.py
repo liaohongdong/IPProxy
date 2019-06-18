@@ -18,8 +18,8 @@ requests.packages.urllib3.disable_warnings()
 
 
 class GetFreeProxy(object):
-    @staticmethod
-    def freeProxyFirst(page=10):
+    @classmethod
+    def freeProxyFirst(cls, page=10):
         url_list = [
             'http://www.data5u.com/',
             # 'http://www.data5u.com/free/gngn/index.shtml',
@@ -74,8 +74,8 @@ class GetFreeProxy(object):
                     'life': '',  # 存活时间
                 }
 
-    @staticmethod  # 有点用不了 网站打开很慢
-    def freeProxyThird():
+    @classmethod  # 有点用不了 网站打开很慢
+    def freeProxyThird(cls):
         url = 'http://www.ip181.com/'
         # html_tree = getHtmlTree(url)
         resp = requests.get(url, timeout=30)
@@ -99,8 +99,8 @@ class GetFreeProxy(object):
         except Exception as e:
             pass
 
-    @staticmethod
-    def freeProxyFourth(page_count=1):
+    @classmethod
+    def freeProxyFourth(cls, page_count=1):
         url_list = [
             'http://www.xicidaili.com/nn/',  # 高匿
             'http://www.xicidaili.com/nt/',  # 透明
@@ -328,10 +328,10 @@ if __name__ == '__main__':
     # d = g.freeProxySecond()
     # d = g.freeProxyThird()
     # d = g.freeProxyFourth()
-    # d = g.freeProxyFifth()
+    d = g.freeProxyFifth()
     # d = g.freeProxySixth()
     # d = g.freeProxySeventh()
     # d = g.freeProxyEight()
-    d = g.freeProxyNinth()
+    # d = g.freeProxyNinth()
     for i in d:
         o(i)
