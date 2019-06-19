@@ -20,9 +20,9 @@ def robustCrawl(func):
 
 
 def verifyProxyFormat(proxy):
-    verify_regex = r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}"
-    _proxy = re.findall(verify_regex, proxy)
-    return True if len(_proxy) == 1 and _proxy[0] == proxy else False
+    verify_regex = r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
+    _proxy = re.findall(verify_regex, proxy['ip'])
+    return True if len(_proxy) == 1 else False
 
 
 def getHtmlTree(url, **kwargs):

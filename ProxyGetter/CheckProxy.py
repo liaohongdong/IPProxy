@@ -20,7 +20,7 @@ class CheckProxy(object):
             except Exception as e:
                 log.info(u"代理获取函数 {} 运行出错!".format(func_name))
                 log.error(str(e))
-        log.info(u"所有函数运行完毕 " + "***" * 5)
+        log.info(u"所有函数运行完毕 " + "***" * 50)
         for func_name, func in member_list:
             log.info(u"函数 {n}，获取到代理输： {c}".format(n=func_name, c=proxy_count_dict.get(func_name, 0)))
 
@@ -38,4 +38,4 @@ class CheckProxy(object):
 
 if __name__ == '__main__':
     CheckProxy.checkAllGetProxyFunc()
-    # CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxyFirst)
+    CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxyFirst)

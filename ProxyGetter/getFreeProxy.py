@@ -42,6 +42,7 @@ class GetFreeProxy(object):
                         'resp_speed': arr[7],  # 响应速度
                         'final_verify_time': arr[8],  # 最后验证时间
                         'life': '',  # 存活时间
+                        'num': 3
                     }
                 except Exception as e:
                     print(e)
@@ -72,13 +73,14 @@ class GetFreeProxy(object):
                     'resp_speed': '',  # 响应速度
                     'final_verify_time': '',  # 最后验证时间
                     'life': '',  # 存活时间
+                    'num': 3
                 }
 
     @classmethod  # 有点用不了 网站打开很慢
     def freeProxyThird(cls):
         url = 'http://www.ip181.com/'
         # html_tree = getHtmlTree(url)
-        resp = requests.get(url, timeout=30)
+        resp = requests.get(url, timeout=60)
         html_tree = resp.content
         try:
             jsonstr = json.loads(html_tree.decode('utf-8'))
@@ -95,6 +97,7 @@ class GetFreeProxy(object):
                     'resp_speed': '',  # 响应速度
                     'final_verify_time': '',  # 最后验证时间
                     'life': '',  # 存活时间
+                    'num': 3
                 }
         except Exception as e:
             pass
@@ -134,6 +137,7 @@ class GetFreeProxy(object):
                             'resp_speed': resp_speed[0],  # 响应速度
                             'final_verify_time': final_verify_time[0],  # 最后验证时间
                             'life': life[0],  # 存活时间
+                            'num': 3
                         }
                     except Exception as e:
                         o(e)
@@ -178,6 +182,7 @@ class GetFreeProxy(object):
                     'resp_speed': resp_speed,  # 响应速度
                     'final_verify_time': final_verify_time,  # 最后验证时间
                     'life': life,  # 存活时间
+                    'num': 3
                 }
             except Exception as e:
                 o(e)
@@ -204,6 +209,7 @@ class GetFreeProxy(object):
                     'resp_speed': tr.xpath('./td[6]/text()')[0],  # 响应速度
                     'final_verify_time': tr.xpath('./td[7]/text()')[0],  # 最后验证时间
                     'life': '',  # 存活时间
+                    'num': 3
                 }
 
     @classmethod
@@ -231,6 +237,7 @@ class GetFreeProxy(object):
                     'resp_speed': il.xpath('.//td[6]/text()')[0],  # 响应速度
                     'final_verify_time': il.xpath('.//td[7]/text()')[0],  # 最后验证时间
                     'life': '',  # 存活时间
+                    'num': 3
                 }
 
     @classmethod
@@ -256,6 +263,7 @@ class GetFreeProxy(object):
                     'resp_speed': il.xpath('.//td[8]/text()')[0],  # 响应速度
                     'final_verify_time': il.xpath('.//td[9]/text()')[0],  # 最后验证时间
                     'life': '',  # 存活时间
+                    'num': 3
                 }
 
     @classmethod
@@ -263,7 +271,7 @@ class GetFreeProxy(object):
         urls = ['https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-1']
         request = WebRequest()
         for url in urls:
-            r = request.get(url, timeout=10)
+            r = request.get(url, timeout=30)
             proxies = re.findall(r'<td>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})</td>[\s\S]*?<td>(\d+)</td>', r.text)
             for proxy in proxies:
                 yield {
@@ -277,6 +285,7 @@ class GetFreeProxy(object):
                     'resp_speed': '',  # 响应速度
                     'final_verify_time': '',  # 最后验证时间
                     'life': '',  # 存活时间
+                    'num': 3
                 }
 
     @staticmethod
@@ -324,14 +333,25 @@ class GetFreeProxy(object):
 
 if __name__ == '__main__':
     g = GetFreeProxy()
-    # d = g.freeProxyFirst()
+    d = g.freeProxyFirst()
     # d = g.freeProxySecond()
     # d = g.freeProxyThird()
     # d = g.freeProxyFourth()
-    d = g.freeProxyFifth()
+    # d = g.freeProxyFifth()
     # d = g.freeProxySixth()
     # d = g.freeProxySeventh()
     # d = g.freeProxyEight()
     # d = g.freeProxyNinth()
-    for i in d:
-        o(i)
+    # for i in d:
+    #     o(i)
+    from ProxyGetter.CheckProxy import CheckProxy
+
+    CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxyFirst)
+    CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxySecond)
+    CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxyThird)
+    CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxyFourth)
+    CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxyFifth)
+    CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxySixth)
+    CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxySeventh)
+    CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxyEight)
+    CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxyNinth)

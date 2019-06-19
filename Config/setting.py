@@ -10,21 +10,14 @@ DATABASES = {
 
 PROXY_GETTER = [
     "freeProxyFirst",
-    "freeProxySecond",
-    # "freeProxyThird",  # 网站已不能访问
-    "freeProxyFourth",
-    "freeProxyFifth",
-    # "freeProxySixth"   # 不再提供免费代理
-    "freeProxySeventh",
+    # "freeProxySecond",
+    # "freeProxyThird",
+    # "freeProxyFourth",
+    # "freeProxyFifth",
+    # "freeProxySixth",
+    # "freeProxySeventh",
     # "freeProxyEight",
     # "freeProxyNinth",
-    "freeProxyTen",
-    "freeProxyEleven",
-    "freeProxyTwelve",
-    # foreign website, outside the wall
-    # "freeProxyWallFirst",
-    # "freeProxyWallSecond",
-    # "freeProxyWallThird"
 ]
 
 SERVER_API = {

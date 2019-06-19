@@ -20,7 +20,7 @@ class DbClient(object):
     def __initDbClient(self):
         __type = None
         if "redis" == config.db_type:
-            __type = "SsdbClient"
+            __type = "RedisClient"
         else:
             pass
         assert __type, 'type error, Not supper DB type: {}'.format(config.db_type)
@@ -45,13 +45,13 @@ class DbClient(object):
     def put(self, key, **kwargs):
         return self.client.put(key, **kwargs)
 
-    def update(self, key, value, **kwargs):
+    def update(self, key, value, **kwargs):  # 。。。。。
         return self.client.update(key, value, **kwargs)
 
     def delete(self, key, **kwargs):
         return self.client.delete(self, key, **kwargs)
 
-    def exists(self, key, **kwargs):
+    def exists(self, key, **kwargs):  # 。。。。。
         return self.client.exists(key, **kwargs)
 
     def pop(self, **kwargs):

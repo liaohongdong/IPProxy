@@ -8,7 +8,7 @@ from Util.Print import o
 class RedisClient(object):
     def __init__(self, name, host, port, username=None, **kwargs):
         self.name = name
-        self.__conn = redis.Redis(host=host, port=port, db=0, socket_timeout=30, **kwargs)
+        self.__conn = redis.Redis(host=host, port=port, socket_timeout=30, **kwargs)
 
     def get(self):
         key = self.__conn.hgetall(name=self.name)
@@ -19,8 +19,8 @@ class RedisClient(object):
             return rkey
 
     def put(self, key):
-        key = json.dumps(key) if isinstance(key, (dict, list)) else key
-        return self.__conn.hincrby(self.name, key, 1)
+        key = key if isinstance(key, dict) else key
+        return self.__conn.hset(self.name, key['ip'] + key['port'], json.dumps(key))
 
     def getvalue(self, key):
         value = self.__conn.hget(self.name, key)
