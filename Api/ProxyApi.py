@@ -29,6 +29,8 @@ api_list = {
     'get_status': u'proxy statistics'
 }
 
+ProxyManager = ProxyManager()
+
 
 @app.route('/')
 def index():
@@ -37,7 +39,7 @@ def index():
 
 @app.route('/get/')
 def get():
-    proxy = ProxyManager.get()
+    proxy = ProxyManager.get_new()
     return proxy if proxy else 'no proxy!'
 
 
@@ -51,25 +53,25 @@ def refresh():
 
 @app.route('/get_all/')
 def getAll():
-    proxies = ProxyManager().getAll()
+    proxies = ProxyManager.getAll()
     return proxies
 
 
 @app.route('/delete/', methods=['GET'])
 def delete():
     proxy = request.args.get('proxy')
-    ProxyManager().delete(proxy)
+    ProxyManager.delete(proxy)
     return 'success'
 
 
 @app.route('/get_status/')
 def getStatus():
-    status = ProxyManager().getNumber()
-    return status
+    raw, useful = ProxyManager.getNumber_new()
+    return "等待筛选的有{raw}个，可用的有{useful}个".format(raw=raw, useful=useful)
 
 
 def run():
-    app.run(host=config.host_ip, port=config.db_port)
+    app.run(host=config.host_ip, port=config.host_port)
 
 
 if __name__ == '__main__':

@@ -57,6 +57,14 @@ class RedisClient(object):
     def getAllDict(self):
         return self.__conn.hgetall(self.name)
 
+    def getNumber(self, *args):
+        print(args)
+        self.changeTable(args[0])
+        raw = self.getAll()
+        self.changeTable(args[1])
+        useful = self.getAll()
+        return len(raw), len(useful)
+
     def changeTable(self, name):
         self.name = name
 

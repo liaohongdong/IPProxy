@@ -42,12 +42,18 @@ class ProxyManager(object):
                 return random.choice(item_dict.keys())
         return None
 
+    def get_new(self):
+        self.db.changeTable(self.useful_proxy_queue)
+        item_dict = self.db.getAll()
+        if item_dict:
+            return random.choice(item_dict)
+
     def delete(self, proxy):
         self.db.changeTable(self.useful_proxy_queue)
         self.db.delete(proxy)
 
     def getAll(self):
-        # self.db.changeTable(self.useful_proxy_queue)
+        self.db.changeTable(self.useful_proxy_queue)
         return self.db.getAll()
         # if EnvUtil.PY3:
         #     return list(item_dict.keys()) if item_dict else list()
@@ -62,6 +68,14 @@ class ProxyManager(object):
             'raw_proxy': total_raw_proxy,
             'useful_proxy': total_useful_proxy
         }
+
+    def getNumber_new(self):
+        # self.db.changeTable(self.raw_proxy_queue)
+        raw, useful = self.db.getNumber(self.raw_proxy_queue, self.useful_proxy_queue)
+        # self.db.changeTable(self.useful_proxy_queue)
+        # total_useful_proxy = self.db.getNumber(self.useful_proxy_queue)
+        print('{}---,{}'.format(raw, useful))
+        return raw, useful
 
 
 if __name__ == '__main__':

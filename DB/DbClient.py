@@ -66,8 +66,8 @@ class DbClient(object):
     def changeTable(self, name):
         self.client.changeTable(name)
 
-    def getNumber(self):
-        return self.client.getNumber()
+    def getNumber(self, *args):
+        return self.client.getNumber(*args)
 
 
 if __name__ == '__main__':
