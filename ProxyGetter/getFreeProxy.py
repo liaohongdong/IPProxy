@@ -25,8 +25,13 @@ class GetFreeProxy(object):
             # 'http://www.data5u.com/free/gngn/index.shtml',
             # 'http://www.data5u.com/free/gnpt/index.shtml'
         ]
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
+        }
         for url in url_list:
-            html_tree = getHtmlTree(url)
+            # html_tree = getHtmlTree(url)
+            page = cls.driver(url, headers)
+            html_tree = etree.HTML(page)
             ul_list = html_tree.xpath('//ul[@class="l2"]')
             for ul in ul_list:
                 try:

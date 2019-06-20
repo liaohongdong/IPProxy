@@ -1,4 +1,5 @@
 import sys
+import json
 import time
 
 try:
@@ -44,14 +45,14 @@ class ProxyValidSchedule(ProxyManager, object):
 
     def putQueue(self):
         self.db.changeTable(self.useful_proxy_queue)
-        self.proxy_item = self.db.getAll()
+        self.proxy_item = self.db.getAllDict()
         for item in self.proxy_item:
-            self.queue.put(item)
+            self.queue.put(json.loads(self.proxy_item[item]))
 
 
 def run():
-    p = ProxyValidSchedule()
-    p.main()
+    pp = ProxyValidSchedule()
+    pp.main()
 
 
 if __name__ == '__main__':

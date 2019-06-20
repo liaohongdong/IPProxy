@@ -20,27 +20,30 @@ class ProxyRefreshSchedule(ProxyManager):
 
     def validProxy(self):
         # 验证raw_proxy_queue中的代理, 将可用的代理放入useful_proxy_queue
-        self.db.changeTable(self.useful_proxy_queue)
-        raw_proxy_item = self.db.pop()
-        self.log.info('ProxyRefreshSchedule: %s start validProxy' % time.ctime())
-        # 计算剩余代理，用来减少重复计算
-        remaining_proxies = self.getAll()
-        while raw_proxy_item:
-            raw_proxy = raw_proxy_item.get('proxy')
-            if isinstance(raw_proxy, bytes):
-                # 兼容Py3
-                raw_proxy = raw_proxy.decode('utf8')
+        self.db.changeTable(self.raw_proxy_queue)
+        try:
+            raw_proxy_item, value = self.db.pop()
+            self.log.info('ProxyRefreshSchedule: %s start validProxy' % time.ctime())
+            # 计算剩余代理，用来减少重复计算
+            # remaining_proxies = self.getAll()
+            while raw_proxy_item:
+                raw_proxy = raw_proxy_item
+                if validUsefulProxy(raw_proxy):
+                    self.db.changeTable(self.useful_proxy_queue)
+                    self.db.put(value)
+                    self.log.info('ProxyRefreshSchedule: %s validation pass' % raw_proxy)
+                else:
+                    self.log.info('ProxyRefreshSchedule: %s validation fail' % raw_proxy)
 
-            if (raw_proxy not in remaining_proxies) and validUsefulProxy(raw_proxy):
-                self.db.changeTable(self.useful_proxy_queue)
-                self.db.put(raw_proxy)
-                self.log.info('ProxyRefreshSchedule: %s validation pass' % raw_proxy)
-            else:
-                self.log.info('ProxyRefreshSchedule: %s validation fail' % raw_proxy)
-            self.db.changeTable(self.raw_proxy_queue)
-            raw_proxy_item = self.db.pop()
-            remaining_proxies = self.getAll()
-        self.log.info('ProxyRefreshSchedule: %s validProxy complete' % time.ctime())
+                self.db.changeTable(self.raw_proxy_queue)
+                raw_proxy_item, value = self.db.pop()
+                if raw_proxy_item is None:
+                    break
+                # remaining_proxies = self.getAll()
+            self.log.info('ProxyRefreshSchedule: %s validProxy complete' % time.ctime())
+        except Exception as e:
+            # print(e)
+            pass
 
 
 def refreshPool():
@@ -72,8 +75,9 @@ def fetchAll():
 def run():
     scheduler = BackgroundScheduler()
     # 不用太快, 网站更新速度比较慢, 太快会加大验证压力, 导致raw_proxy积压
-    scheduler.add_job(fetchAll, 'interval', minutes=15, id="fetch_proxy")
-    scheduler.add_job(batchRefresh, "interval", minutes=1)  # 每分钟检查一次
+    scheduler.add_job(fetchAll, 'interval', minutes=10, id="fetch_proxy")
+    # scheduler.add_job(batchRefresh, "interval", minutes=1)  # 每分钟检查一次
+    scheduler.add_job(batchRefresh, "interval", seconds=10)  # 每分钟检查一次
     scheduler.start()
 
     fetchAll()

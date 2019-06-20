@@ -60,6 +60,9 @@ class DbClient(object):
     def getAll(self):
         return self.client.getAll()
 
+    def getAllDict(self):
+        return self.client.getAllDict()
+
     def changeTable(self, name):
         self.client.changeTable(name)
 

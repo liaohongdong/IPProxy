@@ -49,14 +49,12 @@ def tcpConnent(proxy):
 
 
 def validUsefulProxy(proxy):
-    if isinstance(proxy, bytes):
-        proxy = proxy.decode('utf8')
     proxies = {
         "http": "http://{proxy}".format(proxy=proxy)
         # "http": "82.114.241.138:8080"
     }
     try:
-        r = requests.get("http://httpbin.org/ip", proxies=proxies, timeout=10, verify=False)
+        r = requests.get("http://httpbin.org/ip", proxies=proxies, timeout=15, verify=False)
         print(r.status_code)
         if r.status_code == 200 and r.json().get("origin"):
             return True

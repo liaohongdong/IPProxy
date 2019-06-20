@@ -47,11 +47,11 @@ class ProxyManager(object):
         self.db.delete(proxy)
 
     def getAll(self):
-        self.db.changeTable(self.useful_proxy_queue)
-        item_dict = self.db.getAll()
-        if EnvUtil.PY3:
-            return list(item_dict.keys()) if item_dict else list()
-        return item_dict.keys() if item_dict else list()
+        # self.db.changeTable(self.useful_proxy_queue)
+        return self.db.getAll()
+        # if EnvUtil.PY3:
+        #     return list(item_dict.keys()) if item_dict else list()
+        # return item_dict.keys() if item_dict else list()
 
     def getNumber(self):
         self.db.changeTable(self.raw_proxy_queue)
