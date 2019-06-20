@@ -10,14 +10,14 @@ DATABASES = {
 
 PROXY_GETTER = [
     "freeProxyFirst",
-    # "freeProxySecond",
-    # "freeProxyThird",
-    # "freeProxyFourth",
-    # "freeProxyFifth",
-    # "freeProxySixth",
-    # "freeProxySeventh",
-    # "freeProxyEight",
-    # "freeProxyNinth",
+    "freeProxySecond",
+    "freeProxyThird",
+    "freeProxyFourth",
+    "freeProxyFifth",
+    "freeProxySixth",
+    "freeProxySeventh",
+    "freeProxyEight",
+    "freeProxyNinth",
 ]
 
 SERVER_API = {

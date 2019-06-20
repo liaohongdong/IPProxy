@@ -2,7 +2,7 @@ import requests
 
 if __name__ == '__main__':
     # d = requests.get('http://www.baidu.com/', proxies={"http": "http://111.13.134.22:80"}, timeout=10)
-    d = requests.get('http://www.baidu.com/', proxies={"http": "http://113.247.252.114:9090"}, timeout=10)
+    d = requests.get('http://www.baidu.com/', proxies={"http": "http://1.196.160.79:9999"}, timeout=10)
     print(d)
     # requests.get('http://www.baidu.com/', proxies={"http": "http://112.91.224.33:9069"})
     # requests.get('http://www.baidu.com/', proxies={"http": "http://123.117.32.145:8359"})
