@@ -14,20 +14,20 @@ from queue import Queue  # py2
 
 
 class ProxyCheck(ProxyManager, Thread):
-    def __init__(self, queue, item_dict):
-        # def __init__(self):
+    # def __init__(self, queue, item_dict):
+    def __init__(self):
         ProxyManager.__init__(self)
         Thread.__init__(self)
         self.log = Loghandler('proxy_check', file=False)  # 多线程同时写一个日志文件会有问题
-        self.queue = queue
-        self.item_dict = item_dict
+        # self.queue = queue
+        # self.item_dict = item_dict
 
-        # self.queue = Queue()
-        # self.item_dict = dict()
+        self.queue = Queue()
+        self.item_dict = dict()
 
     def run(self):
         self.db.changeTable(self.useful_proxy_queue)
-        # self.putQueue()
+        self.putQueue()
         while self.queue.qsize:
             proxy = self.queue.get()
             o(proxy)
@@ -52,11 +52,11 @@ class ProxyCheck(ProxyManager, Thread):
                     self.db.put(proxy)
             self.queue.task_done()
 
-    # def putQueue(self):
-    #     self.db.changeTable(self.useful_proxy_queue)
-    #     self.item_dict = self.db.getAllDict()
-    #     for item in self.item_dict:
-    #         self.queue.put(json.loads(self.item_dict[item]))
+    def putQueue(self):
+        self.db.changeTable(self.useful_proxy_queue)
+        self.item_dict = self.db.getAllDict()
+        for item in self.item_dict:
+            self.queue.put(json.loads(self.item_dict[item]))
 
 
 if __name__ == '__main__':

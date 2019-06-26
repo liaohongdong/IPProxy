@@ -48,8 +48,11 @@ class DbClient(object):
     def update(self, key, value, **kwargs):  # 。。。。。
         return self.client.update(key, value, **kwargs)
 
-    def delete(self, key, **kwargs):
-        return self.client.delete(self, key, **kwargs)
+    def delete(self, key):
+        return self.client.delete(key)
+
+    # def delete(self, key, **kwargs):
+    #     return self.client.delete(self, key, **kwargs)
 
     def exists(self, key, **kwargs):  # 。。。。。
         return self.client.exists(key, **kwargs)

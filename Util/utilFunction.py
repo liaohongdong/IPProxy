@@ -54,7 +54,7 @@ def validUsefulProxy(proxy):
         # "http": "82.114.241.138:8080"
     }
     try:
-        r = requests.get("http://httpbin.org/ip", proxies=proxies, timeout=15, verify=False)
+        r = requests.get("http://httpbin.org/ip", proxies=proxies, timeout=5, verify=False)
         # print(r.status_code)
         if r.status_code == 200 and r.json().get("origin"):
             return True
