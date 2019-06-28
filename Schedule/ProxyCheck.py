@@ -8,7 +8,7 @@ from Util.Print import o
 
 sys.path.append('../')
 
-FAIL_COUNT = 0  # 检验失败次数，超过次数删除代理
+FAIL_COUNT = 1  # 检验失败次数，超过次数删除代理
 
 from queue import Queue  # py2
 
@@ -30,7 +30,7 @@ class ProxyCheck(ProxyManager, Thread):
         self.putQueue()
         while self.queue.qsize:
             proxy = self.queue.get()
-            o(proxy)
+            # o(proxy)
             # o(json.loads(self.item_dict[proxy['ip']+':'+proxy['port']]))
             count = proxy['num']
             name = proxy['ip'] + ':' + proxy['port']
@@ -44,7 +44,7 @@ class ProxyCheck(ProxyManager, Thread):
                 pass
             else:
                 self.log.info('ProxyCheck: {} validation fail'.format(proxy))
-                if count and int(count) <= FAIL_COUNT:
+                if count and int(count) < FAIL_COUNT:
                     self.log.info('ProxyCheck: {} fail too many, delete!'.format(proxy))
                     self.db.delete(name)
                 else:
