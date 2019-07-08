@@ -1,6 +1,7 @@
 import sys
 import json
 import time
+from apscheduler.schedulers.background import BackgroundScheduler
 
 try:
     from Queue import Queue  # py3
@@ -50,11 +51,22 @@ class ProxyValidSchedule(ProxyManager, object):
             self.queue.put(json.loads(self.proxy_item[item]))
 
 
-def run():
+def checkIPByloop():
     pp = ProxyValidSchedule()
     pp.main()
 
 
+def run():
+    print('ProxyValidSchedule --------> run')
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(checkIPByloop, 'interval', seconds=10)
+    scheduler.start()
+    checkIPByloop()
+    while True:
+        time.sleep(3)
+
+
 if __name__ == '__main__':
-    p = ProxyValidSchedule()
-    p.main()
+    # p = ProxyValidSchedule()
+    # p.main()
+    run()
