@@ -1,10 +1,13 @@
 import requests
+from test import testRun
 
 if __name__ == '__main__':
-    asd = '119.180.170.202:8060'
+    asd = '124.205.155.157:9090'
     # d = requests.get('http://www.baidu.com/', proxies={"http": "http://111.13.134.22:80"}, timeout=10)
     d = requests.get('http://www.baidu.com/', proxies={"http": asd}, timeout=5)
     print(d)
+
+    t = testRun()
     # requests.get('http://www.baidu.com/', proxies={"http": "http://112.91.224.33:9069"})
     # requests.get('http://www.baidu.com/', proxies={"http": "http://123.117.32.145:8359"})
     # requests.get('http://www.baidu.com/', proxies={"http": "http://40.73.36.247:8411"})
