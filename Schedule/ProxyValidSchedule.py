@@ -59,7 +59,7 @@ def checkIPByloop():
 def run():
     print('ProxyValidSchedule --------> run')
     scheduler = BackgroundScheduler()
-    scheduler.add_job(checkIPByloop, 'interval', seconds=10)
+    scheduler.add_job(checkIPByloop, 'interval', minutes=30)
     scheduler.start()
     checkIPByloop()
     while True:
