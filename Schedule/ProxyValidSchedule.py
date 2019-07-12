@@ -47,6 +47,7 @@ class ProxyValidSchedule(ProxyManager, object):
     def putQueue(self):
         self.db.changeTable(self.useful_proxy_queue)
         self.proxy_item = self.db.getAllDict()
+        print('开始调度............')
         for item in self.proxy_item:
             self.queue.put(json.loads(self.proxy_item[item]))
 

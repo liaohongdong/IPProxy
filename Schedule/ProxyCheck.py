@@ -35,6 +35,7 @@ class ProxyCheck(ProxyManager, Thread):
             count = proxy['num']
             name = proxy['ip'] + ':' + proxy['port']
             if validUsefulProxy(name):
+                self.log.info('ProxyCheck: {} validation pass pass pass'.format(proxy))
                 # 验证通过计数器减1
                 # if count and int(count) > 0:
                 #     self.db.put(proxy, num=int(count) - 1)
