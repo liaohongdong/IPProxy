@@ -15,12 +15,12 @@
 FROM ubuntu:18.04
 MAINTAINER lhd liaodoho163@qq.com
 
-ENV LANG C
+# ENV LANG C
 ENV TZ Asia/Shanghai
 
 RUN apt-get update -y \
   && apt-get upgrade -y \
-  && apt-get install -y python3-pip python3-dev locales wget curl vim apt-transport-httpss \
+  && apt-get install -y python3-pip python3-dev locales wget curl vim apt-transport-https \
   && pip3 install --upgrade pip -i https://pypi.douban.com/simple/
 
 RUN wget http://www.linuxidc.com/files/repo/google-chrome.list -P /etc/apt/sources.list.d/
