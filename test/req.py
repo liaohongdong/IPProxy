@@ -2,7 +2,7 @@ import requests
 # from test import testRun
 
 if __name__ == '__main__':
-    asd = '221.229.252.98:9797'
+    asd = '119.57.108.53:53281'
     # d = requests.get('http://www.baidu.com/', proxies={"http": "http://111.13.134.22:80"}, timeout=10)
     d = requests.get('http://www.baidu.com/', proxies={"http": asd}, timeout=15)
     print(d)

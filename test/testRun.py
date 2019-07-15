@@ -1,5 +1,5 @@
 import time
-
+import sys
 
 class testRun(object):
 
@@ -13,3 +13,4 @@ class testRun(object):
 if __name__ == '__main__':
     d = testRun()
     d.run()
+    print(sys.version)
