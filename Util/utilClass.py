@@ -19,13 +19,8 @@ class Singleton(type):
 
     def __call__(cls, *args, **kwargs):
         if cls not in cls._inst:
-            cls._inst[cls] = super(Singleton, cls).__call__(*args)
+            cls._inst[cls] = super(Singleton, cls).__call__(*args, **kwargs)
         return cls._inst[cls]
-
-
-class Liao(object):
-    def __init__(self):
-        print('asdf')
 
 
 if __name__ == '__main__':
